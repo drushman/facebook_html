@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" src ="{{ app.request.getBaseURL() ~ '/assets/css/style.css' }}" />
+</head>
+<body>
+
+<div class="nav-collapse">
+      <ul class="nav">
+          <li {% if 'fan' == type %}class="active"{% endif %}><a target="_top" href="{{ 'http://apps.facebook.com/vchtmlapp/admin/config/fans/id_page/' ~ page_id ~ '/' }}">{{ 'Fan Page'|trans }}</a></li>
+          <li {% if 'nonfan' == type %}class="active"{% endif %}><a target="_top" href="{{ 'http://apps.facebook.com/vchtmlapp/admin/config/nonfans/id_page/' ~ page_id ~ '/' }}">{{ 'None Fan Page'|trans }}</a></li>
+          </li>
+      </ul>
+</div><!--/.nav-collapse -->
+
+<div class="container">
+        <div id="main" role="main" class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+</div>
+
+</body>
+</html>

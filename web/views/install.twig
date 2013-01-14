@@ -1,0 +1,100 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src = "{{ app.request.getBaseURL() ~ '/assets/js/app.js' }}" ></script>
+<script src = "{{ app.request.getBaseURL() ~ '/assets/js/fb.js' }}" ></script>
+<script src = "{{ app.request.getBaseURL() ~ '/assets/js/fb_1.js' }}" ></script>
+<script src = "{{ app.request.getBaseURL() ~ '/assets/js/main.js' }}" ></script>
+<script src = "{{ app.request.getBaseURL() ~ '/assets/js/controller.js' }}" ></script>
+<script src = "{{ app.request.getBaseURL() ~ '/assets/js/ga.js' }}" ></script>
+<script type="text/javascript" src="//connect.facebook.net/en_US/all.js"></script>
+
+<script>
+  function loadFanPages() {
+    
+    FB.login(function (response){
+    FB.api('/me/accounts',function(apiresponse){
+    var data=apiresponse['data'];
+    var ids = new Array();
+    for(var i=0; i<data.length; i++){
+    ids[i]=data[i].id;
+    }
+    console.log(ids);
+    console.log(data);
+    });
+
+    },{scope:'manage_pages'});
+  }
+  
+  
+  function loadFanPages_1()
+  {
+      FB.login(
+          function(response) {
+//              console.log(response.data);
+              showFanpages();
+          }
+          ,{ scope : 'email, manage_pages' });
+  }
+    
+  function showFanpages()
+  {
+    var reload = $("#reload").length;
+    if(reload>0){
+      FB.api('/me/accounts', function(response) {
+        var data = response.data;
+        var html ='';
+        for (id in response.data)
+        {
+          page = data[id];
+          html += "<li><input type='checkbox' name='fanpages[]' value='" + page.id + "'> " + page.name + "</li>";
+          $('#load_my_fanpage').remove();
+        }
+        if (html != '')
+        {
+          $('.sm_listfan').html(html);
+        }
+        if(is_runned && html=='')
+        {
+          /*create new fanpage is defined in initHead in module facebook*/
+          $('.sm_listfan').html('<li>No fanpage found - <a target="_parent" href="' + social_url_fanpage_create + '">Create a Page</a></li>');
+        }
+        //select fanpage by default on top url
+         checkPageByDefault('<?php echo $this->id_page; ?>',$('input[value="<?php echo $this->id_page; ?>"]'))
+      });
+    }
+    $("input[name='fanpages[]']").each(function(){
+      markPageInstalled($(this).val(), $(this));
+    });
+  }
+</script>
+
+
+<script>
+  social_app_url				= "http://apps.facebook.com/vchtmlapp";
+  social_app_id				= "130388247122711";
+  social_user_id				= "100000243737918";
+	social_url_fanpage_create	= '//www.facebook.com/pages/create.php';
+	confirm_add_fanpage			= "CONFIRM_ADD_FANPAGE";
+  add_fanpage_successfully	= "ADD_FANPAGE_SUCCESSFUL";
+	base_url					= "";
+</script>
+
+
+<div id="fb-root"></div>
+
+<div class="config_fanpage">
+    <div class="guide_config">
+        Please select a Fan Page to configure Welcome, or click Refresh to load the list of your Fan Page.    
+    </div>
+    <select name='config_id_page' id='config_id_page'>	
+      <option value=''>- Select a Fan Page -</option>
+      
+      {% for key, page in pages %}
+        <option id="id_page_{{ key }}" value="{{ key }}">{{ page }}</option>
+      {% endfor %}
+      
+    </select>
+    
+ 	<a class="button_control greenbutton" id="config_add_to_page">Configure</a>
+  <a class="button_control bluebutton" id="config_refresh_pages" onclick="loadFanPages();"> Refresh	</a>
+</div>	
+

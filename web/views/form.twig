@@ -1,0 +1,58 @@
+{% extends 'backend.html.twig'  %}
+{% block content%}
+<div class="box_list_radio">
+    <table class="config_select_type">
+        <tbody><tr>
+            <td id="select_type">Select type</td>
+            <td align="left">
+                <span><input type="radio" id="form1" name="content_type" {% if active == "image" %} checked="yes" {% endif %} value="1">Image</span>
+                <span><input type="radio" id="form2" name="content_type" {% if active == "html" %} checked="yes" {% endif %} value="2">Html</span>
+                <span><input type="radio" id="form3" name="content_type" {% if active == "iframe" %} checked="yes" {% endif %}value="3">Iframe</span>
+            </td>
+        </tr>
+    </tbody></table>
+</div>
+
+<div id="form-1" class="group-hidden" {% if active != "image" %} style="display:none" {% endif %}>
+  {% if image %}
+         <div class="image-preview">
+           <img src="{{ image }}">
+         </div>
+  {% endif %}
+  <form action="/post/image/{{ type }}/{{ page_id }}" method="post" {{ form_enctype(form_image) }}>
+      {{ form_errors(form_image) }}
+      <div class="image">
+        
+        {{ form_label(form_image.image) }}
+        {{ form_widget(form_image.image) }}
+        
+        
+        
+      </div>
+      <div class="link">
+        {{ form_row(form_image.link) }}
+      </div>
+      
+
+      {{ form_rest(form_image) }}
+      <input type="submit" name="submit" value="Save changes" />
+  </form>
+</div>
+  
+<div id="form-2" class="group-hidden" {% if active != "html" %} style="display:none" {% endif %}>
+  <form action="/post/html/{{ type }}/{{ page_id }}" class="form-image" method="post" {{ form_enctype(form_html) }}>
+      {{ form_widget(form_html) }}
+      <input type="submit" name="submit" value="Save changes" />
+  </form>
+</div>
+  
+<div id="form-3"  class="group-hidden" {% if active != "iframe" %} style="display:none" {% endif %}>
+  <form action="/post/iframe/{{ type }}/{{ page_id }}" class="form-image" method="post" {{ form_enctype(form_iframe) }}>
+      {{ form_widget(form_iframe) }}
+      <input type="submit"  name="submit" value="Save changes" />
+  </form>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src = "{{ app.request.getBaseURL() ~ '/assets/js/app.js' }}" ></script>
+
+{% endblock%}
